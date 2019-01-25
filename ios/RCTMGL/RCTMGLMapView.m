@@ -28,6 +28,7 @@ static double const M2PI = M_PI * 2;
         _pointAnnotations = [[NSMutableArray alloc] init];
         _reactSubviews = [[NSMutableArray alloc] init];
     }
+    self.tintColor = [UIColor colorWithRed:110.0f/255.0f green:30.0f/255.0f blue:255.0f/255.0f alpha:1.0f];
     return self;
 }
 
@@ -194,6 +195,12 @@ static double const M2PI = M_PI * 2;
     self.styleURL = [self _getStyleURLFromKey:_reactStyleURL];
 }
 
+- (void)setReactTintColor:(NSString *)reactTintColor
+{
+    _reactTintColor = reactTintColor;
+    self.tintColor = [self colorFromHexString:reactTintColor];
+}
+
 - (void)setHeading:(double)heading
 {
     _heading = heading;
@@ -246,6 +253,14 @@ static double const M2PI = M_PI * 2;
     UIImage *snapshot = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return writeToDisk ? [RNMBImageUtils createTempFile:snapshot] : [RNMBImageUtils createBase64:snapshot];
+}
+
+- (UIColor *)colorFromHexString:(NSString *)hexString {
+    unsigned rgbValue = 0;
+    NSScanner *scanner = [NSScanner scannerWithString:hexString];
+    [scanner setScanLocation:1]; // bypass '#' character
+    [scanner scanHexInt:&rgbValue];
+    return [UIColor colorWithRed:((rgbValue & 0xFF0000) >> 16)/255.0 green:((rgbValue & 0xFF00) >> 8)/255.0 blue:(rgbValue & 0xFF)/255.0 alpha:1.0];
 }
 
 - (CLLocationDistance)getMetersPerPixelAtLatitude:(double)latitude withZoom:(double)zoomLevel
