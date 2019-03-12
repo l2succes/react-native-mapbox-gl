@@ -50,7 +50,9 @@ RCT_EXPORT_MODULE(RCTMGLMapView)
         UIGestureRecognizer *gestureRecognizer = mapView.gestureRecognizers[i];
         
         if ([gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]) {
-            [tap requireGestureRecognizerToFail:gestureRecognizer];
+            if ([(UITapGestureRecognizer *)gestureRecognizer numberOfTouchesRequired] != 1) {
+                [tap requireGestureRecognizerToFail:gestureRecognizer];
+            }
         }
     }
 
